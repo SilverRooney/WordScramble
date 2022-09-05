@@ -31,8 +31,18 @@ struct ContentView: View {
                             Image(systemName: "\(word.count).circle")
                             Text(word)
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel(word)
+                        .accessibilityHint("\(word.count) letters")
                     }
                 }
+                
+                VStack {
+                    
+                    Button("New Game", action: startGame)
+                    
+                }
+             
             }
             .navigationTitle(rootWord)
             .onSubmit(addNewWord)
@@ -42,6 +52,7 @@ struct ContentView: View {
             } message: {
                 Text(errorMessage)
             }
+            .keyboardType(.default)
         }
         }
     
@@ -61,6 +72,11 @@ struct ContentView: View {
         
         guard isReal(word: answer) else {
             wordError(title: "Word not recognized", message: "Made up word!")
+            return
+        }
+        
+        guard isAboveThreeLetters(word: answer) else {
+            wordError(title: "Word not long enough.", message: "Needs to be over 3 letters")
             return
         }
         
@@ -113,6 +129,16 @@ struct ContentView: View {
         errorTitle = title
         errorMessage = message
         showingError = true
+    }
+    
+    func isAboveThreeLetters(word: String) -> Bool {
+        let letterCount = word.count
+        
+        if letterCount < 3 {
+            return false
+        } else {
+            return true
+        }
     }
 }
 
